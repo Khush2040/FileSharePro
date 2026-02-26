@@ -52,7 +52,8 @@ export default function AuthPage({ onAuthSuccess }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/login", { email: loginEmail, password: loginPassword });
+            const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+            const res = await axios.post(`${API_URL}/api/auth/login`, { email: loginEmail, password: loginPassword });
             localStorage.setItem("authToken", res.data.token);
             localStorage.setItem("userName", res.data.user?.name || res.data.name || "User");
             localStorage.setItem("userRole", res.data.role || selectedRole);
@@ -76,7 +77,8 @@ export default function AuthPage({ onAuthSuccess }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/register", { name: regName, email: regEmail, password: regPassword, role: selectedRole });
+            const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+            const res = await axios.post(`${API_URL}/api/auth/register`, { name: regName, email: regEmail, password: regPassword, role: selectedRole });
             localStorage.setItem("authToken", res.data.token);
             localStorage.setItem("userName", res.data.user?.name || res.data.name || regName);
             localStorage.setItem("userRole", res.data.role || selectedRole);

@@ -14,7 +14,8 @@ export default function Files() {
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
-    const endpoint = mode === "admin" ? "http://localhost:5000/api/files/admin/all" : "http://localhost:5000/api/files";
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    const endpoint = mode === "admin" ? `${API_URL}/api/files/admin/all` : `${API_URL}/api/files`;
     axios.get(endpoint, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setFiles(res.data))
       .catch(console.error);
@@ -34,7 +35,8 @@ export default function Files() {
   const handleDelete = async (fileId) => {
     try {
       if (mode === "personal") {
-        await axios.delete(`http://localhost:5000/api/files/${fileId}`, {
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        await axios.delete(`${API_URL}/api/files/${fileId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
@@ -47,7 +49,8 @@ export default function Files() {
   const handleRename = async (fileId, newName) => {
     try {
       if (mode === "personal") {
-        const res = await axios.put(`http://localhost:5000/api/files/${fileId}`, { name: newName }, {
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        const res = await axios.put(`${API_URL}/api/files/${fileId}`, { name: newName }, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setFiles(prev => prev.map(f => f._id === fileId ? { ...f, originalName: res.data.name, name: res.data.name } : f));
@@ -61,9 +64,10 @@ export default function Files() {
 
   const handleDownload = async (file) => {
     try {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
       const endpoint = mode === "admin"
-        ? `http://localhost:5000/api/files/admin/download/${file._id}`
-        : `http://localhost:5000/api/files/download/${file._id}`;
+        ? `${API_URL}/api/files/admin/download/${file._id}`
+        : `${API_URL}/api/files/download/${file._id}`;
 
       const response = await axios.get(endpoint, {
         headers: { Authorization: `Bearer ${token}` },

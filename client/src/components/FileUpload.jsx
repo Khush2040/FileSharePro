@@ -21,7 +21,8 @@ export default function FileUpload({ onUpload }) {
     try {
       setLoading(true);
       const token = localStorage.getItem("authToken");
-      const res = await axios.post("http://localhost:5000/api/files/upload", formData, {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const res = await axios.post(`${API_URL}/api/files/upload`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data"
