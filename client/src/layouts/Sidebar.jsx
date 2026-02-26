@@ -1,10 +1,13 @@
 import { NavLink } from "react-router-dom";
-import { Home, FileText, Users, Settings, LogOut, Star, BarChart2 } from "lucide-react";
+import { Home, FileText, Users, Settings, LogOut, Star, BarChart2, HelpCircle, MessageSquare } from "lucide-react";
 import { Button } from "../components/ui/button";
 import UpgradeDialog from "../components/ui/UpgradeDialog";
 import Logo from "../components/ui/Logo";
 
 export default function Sidebar({ fileCount = 0, userCount = 0, onLogout }) {
+  const userRole = localStorage.getItem("userRole") || "user";
+  const isAdmin = userRole === "admin";
+
   const navItem = (to, label, icon, badge = null) => (
     <NavLink
       to={to}
@@ -41,8 +44,11 @@ export default function Sidebar({ fileCount = 0, userCount = 0, onLogout }) {
         {navItem("/", "Dashboard", <Home size={20} />)}
         {navItem("/analytics", "Analytics", <BarChart2 size={20} />)}
         {navItem("/files", "Files", <FileText size={20} />, fileCount)}
-        {navItem("/users", "Users", <Users size={20} />, userCount)}
+        {isAdmin && navItem("/users", "Users", <Users size={20} />, userCount)}
         {navItem("/settings", "Settings", <Settings size={20} />)}
+        <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-4 mt-8">Support</div>
+        {navItem("/help", "Manual / Guide", <HelpCircle size={20} />)}
+        {navItem("/contact", "Contact Us", <MessageSquare size={20} />)}
       </nav>
 
       <div className="p-4 border-t border-white/5 space-y-4">

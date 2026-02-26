@@ -15,6 +15,8 @@ import {
   HardDrive,
   ArrowUp,
   Activity,
+  Crown,
+  ShieldCheck
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -31,6 +33,10 @@ export default function Dashboard() {
   const [files, setFiles] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Determine if viewing as Admin or Standard User
+  const userRole = localStorage.getItem("userRole") || "user";
+  const isAdmin = userRole === "admin";
 
   // Fetch files and analytics
   useEffect(() => {
@@ -116,8 +122,24 @@ export default function Dashboard() {
       className="space-y-8 relative z-10 w-full"
     >
       <motion.div variants={itemVariants} className="flex flex-col gap-2">
-        <h1 className="text-4xl font-extrabold tracking-tight text-foreground font-heading mb-1 text-gradient">Dashboard</h1>
-        <p className="text-muted-foreground font-medium">Overview of your file storage and activity.</p>
+        <div className="flex items-center gap-3 mb-1">
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground font-heading text-gradient">
+            {isAdmin ? "Admin Overview" : "Dashboard"}
+          </h1>
+          {isAdmin && (
+            <span className="flex items-center gap-1.5 px-3 py-1 bg-red-500/10 text-red-500 border border-red-500/20 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+              <Crown size={14} /> Superuser Mode
+            </span>
+          )}
+          {!isAdmin && (
+            <span className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-xs font-bold tracking-wider uppercase">
+              <ShieldCheck size={14} /> Standard User
+            </span>
+          )}
+        </div>
+        <p className="text-muted-foreground font-medium">
+          {isAdmin ? "Global overview of system-wide storage allocations and network activity." : "Overview of your personal file storage and daily activity."}
+        </p>
       </motion.div>
 
       {/* Stats */}
@@ -165,12 +187,17 @@ export default function Dashboard() {
 
         {/* All files takes remaining 3 columns */}
         <div className="lg:col-span-3 flex flex-col h-full">
-          <div className="glass-card rounded-2xl p-6 h-full flex flex-col shadow-xl border-white/5 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl opacity-50 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-            <h2 className="text-xl font-bold font-heading mb-6 flex items-center gap-2 relative z-10">
-              <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(168,85,247,0.8)]"></div>
-              File Management
-            </h2>
+          <div className={`glass-card rounded-2xl p-6 h-full flex flex-col shadow-xl border-white/5 relative overflow-hidden group ${isAdmin ? 'border-t-2 border-t-red-500/50 shadow-[0_-5px_30px_rgba(239,68,68,0.1)]' : ''}`}>
+            <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-50 pointer-events-none transform translate-x-1/2 -translate-y-1/2 ${isAdmin ? 'bg-red-500/10' : 'bg-primary/10'}`}></div>
+            <div className="flex justify-between items-center mb-6 relative z-10 w-full pr-1">
+              <h2 className="text-xl font-bold font-heading flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full shadow-lg ${isAdmin ? 'bg-red-500 shadow-red-500' : 'bg-primary shadow-primary'}`}></div>
+                {isAdmin ? "Global File Directory" : "Personal Drive"}
+              </h2>
+              {isAdmin && (
+                <span className="text-xs font-semibold text-red-400 bg-red-500/10 px-2.5 py-1 rounded-xl">Elevated Access</span>
+              )}
+            </div>
             <div className="flex-1 overflow-auto rounded-xl relative z-10">
               <FileTable
                 files={files}

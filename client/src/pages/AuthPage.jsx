@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Layers, Lock, Mail, User, Github, Loader2, ArrowRight } from "lucide-react";
+import { Layers, Lock, Mail, User, Github, Loader2, ArrowRight, Shield, UserCircle } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../components/ui/Logo";
@@ -40,6 +40,9 @@ export default function AuthPage({ onAuthSuccess }) {
     const [regEmail, setRegEmail] = useState("");
     const [regPassword, setRegPassword] = useState("");
 
+    // Role Selection
+    const [selectedRole, setSelectedRole] = useState("user");
+
     // OAuth State
     const [oauthProvider, setOauthProvider] = useState(null);
     const [oauthEmail, setOauthEmail] = useState("");
@@ -51,15 +54,17 @@ export default function AuthPage({ onAuthSuccess }) {
         try {
             const res = await axios.post("http://localhost:5000/api/auth/login", { email: loginEmail, password: loginPassword });
             localStorage.setItem("authToken", res.data.token);
-            localStorage.setItem("userName", res.data.user?.name || "User");
+            localStorage.setItem("userName", res.data.user?.name || res.data.name || "User");
+            localStorage.setItem("userRole", res.data.role || selectedRole);
             toast.success("Successfully logged in!");
             if (onAuthSuccess) onAuthSuccess();
             navigate("/");
         } catch (err) {
             console.warn("Login fallback initiated.", err);
-            toast.success("Logged in with Demo Account!");
+            toast.success(`Logged in with Demo ${selectedRole.toUpperCase()} Account!`);
             localStorage.setItem("authToken", "mock-token");
-            localStorage.setItem("userName", "Demo User");
+            localStorage.setItem("userName", `Demo ${selectedRole}`);
+            localStorage.setItem("userRole", selectedRole);
             if (onAuthSuccess) onAuthSuccess();
             navigate("/");
         } finally {
@@ -71,17 +76,19 @@ export default function AuthPage({ onAuthSuccess }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/register", { name: regName, email: regEmail, password: regPassword });
+            const res = await axios.post("http://localhost:5000/api/auth/register", { name: regName, email: regEmail, password: regPassword, role: selectedRole });
             localStorage.setItem("authToken", res.data.token);
-            localStorage.setItem("userName", res.data.user?.name || regName);
+            localStorage.setItem("userName", res.data.user?.name || res.data.name || regName);
+            localStorage.setItem("userRole", res.data.role || selectedRole);
             toast.success("Account created successfully!");
             if (onAuthSuccess) onAuthSuccess();
             navigate("/");
         } catch (err) {
             console.warn("Register fallback initiated.", err);
-            toast.success("Demo Account Created!");
+            toast.success(`Demo ${selectedRole.toUpperCase()} Account Created!`);
             localStorage.setItem("authToken", "mock-token");
-            localStorage.setItem("userName", regName || "Demo User");
+            localStorage.setItem("userName", regName || `Demo ${selectedRole}`);
+            localStorage.setItem("userRole", selectedRole);
             if (onAuthSuccess) onAuthSuccess();
             navigate("/");
         } finally {
@@ -107,6 +114,7 @@ export default function AuthPage({ onAuthSuccess }) {
             toast.success(`Successfully authenticated with ${oauthProvider}!`);
             localStorage.setItem("authToken", `mock-${oauthProvider.toLowerCase()}-token`);
             localStorage.setItem("userName", oauthEmail.split('@')[0] || `${oauthProvider} User`);
+            localStorage.setItem("userRole", "user");
             if (onAuthSuccess) onAuthSuccess();
             navigate("/");
             setLoading(false);
@@ -189,6 +197,24 @@ export default function AuthPage({ onAuthSuccess }) {
                                         <div className="flex-grow border-t border-black/10 dark:border-white/10"></div>
                                     </div>
 
+                                    {/* Role Selection UI */}
+                                    <div className="flex mb-6 p-1 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedRole("user")}
+                                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${selectedRole === "user" ? "bg-background text-primary shadow-md border border-white/10" : "text-muted-foreground hover:text-foreground"}`}
+                                        >
+                                            <UserCircle size={18} /> Standard User
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedRole("admin")}
+                                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${selectedRole === "admin" ? "bg-red-500/20 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.2)] border border-red-500/30" : "text-muted-foreground hover:text-red-400/70"}`}
+                                        >
+                                            <Shield size={18} /> Administrator
+                                        </button>
+                                    </div>
+
                                     <form onSubmit={handleLogin} className="space-y-4">
                                         <div className="space-y-1.5 focus-within:text-primary">
                                             <label className="text-sm font-semibold text-foreground/90 ml-1 transition-colors">Email Address</label>
@@ -245,6 +271,25 @@ export default function AuthPage({ onAuthSuccess }) {
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
+
+                                    {/* Role Selection UI */}
+                                    <div className="flex mb-6 p-1 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedRole("user")}
+                                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${selectedRole === "user" ? "bg-background text-secondary shadow-md border border-white/10" : "text-muted-foreground hover:text-foreground"}`}
+                                        >
+                                            <UserCircle size={18} /> Standard User
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedRole("admin")}
+                                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${selectedRole === "admin" ? "bg-red-500/20 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.2)] border border-red-500/30" : "text-muted-foreground hover:text-red-400/70"}`}
+                                        >
+                                            <Shield size={18} /> Administrator
+                                        </button>
+                                    </div>
+
                                     <form onSubmit={handleRegister} className="space-y-4">
                                         <div className="space-y-1.5 focus-within:text-secondary">
                                             <label className="text-sm font-semibold text-foreground/90 ml-1 transition-colors">Full Name</label>

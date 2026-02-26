@@ -9,7 +9,7 @@ import generateToken from "../utils/generateToken.js";
  */
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Basic validation
     if (!name || !email || !password) {
@@ -30,13 +30,15 @@ export const registerUser = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      role: role || 'user'
     });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
       token: generateToken(user._id)
     });
   } catch (error) {
@@ -60,6 +62,7 @@ export const loginUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
         token: generateToken(user._id)
       });
     } else {

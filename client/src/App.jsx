@@ -10,6 +10,17 @@ import Settings from "./pages/Settings";
 import AuthPage from "./pages/AuthPage";
 import LandingPage from "./pages/LandingPage";
 import Analytics from "./pages/Analytics";
+import Contact from "./pages/Contact";
+import HelpManual from "./pages/HelpManual";
+
+const AdminRoute = ({ children }) => {
+  const userRole = localStorage.getItem("userRole");
+  if (userRole !== "admin") {
+    toast.error("Unauthorized access. Admin privileges required.");
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("authToken"));
@@ -36,8 +47,17 @@ export default function App() {
                 <Route index element={<Dashboard />} />
                 <Route path="analytics" element={<Analytics />} />
                 <Route path="files" element={<Files />} />
-                <Route path="users" element={<Users />} />
+                <Route
+                  path="users"
+                  element={
+                    <AdminRoute>
+                      <Users />
+                    </AdminRoute>
+                  }
+                />
                 <Route path="settings" element={<Settings />} />
+                <Route path="contact" element={<Contact />} />
+                <Route path="help" element={<HelpManual />} />
               </Route>
 
               <Route path="*" element={<Navigate to="/" />} />

@@ -1,7 +1,10 @@
 # Environment Variables
 .env
 .env.*
-
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 # Node.js
 node_modules/
 dist/
@@ -14,15 +17,25 @@ __pycache__/
 *.pyc
 
 # Local Development
-.DS_Store
 .vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sqllite
+*.pid
+*.seed
+
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-**/*.log
-.pnpm-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Server Uploads (Don't track user files)
+# Server Uploads
 server/uploads/
 uploads/
 
@@ -30,8 +43,16 @@ uploads/
 .eslintcache
 .vite/
 .vercel/
+.next/
 
 # Operating System Files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
 Thumbs.db
 Desktop.ini
+$RECYCLE.BIN/

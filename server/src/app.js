@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.routes.js";
 import fileRoutes from "./routes/file.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import contactRoutes from "./routes/contact.routes.js";
 import passport from "./config/passport.js";
 
 // Security Middleware
@@ -37,6 +38,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/files", fileRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/contact", contactRoutes);
 
 // Global Error Handler for Security (Hides stack traces, catches Multer errors)
 app.use((err, req, res, next) => {
