@@ -1,23 +1,22 @@
-# FileShare Pro – Full Stack AWS Deployment
+# FileShare Pro - MERN Stack AWS Deployment
 
 ## Project Overview
 
-FileShare Pro is a full-stack file sharing and management platform developed using the MERN stack. The application provides secure file uploads, file management, analytics, authentication, and responsive dashboard functionality.
+FileShare Pro is a full-stack MERN application for secure file sharing and management. The platform provides authentication, file uploads, analytics, and user management through a responsive React dashboard.
 
-This project was deployed on AWS EC2 as part of a Full Stack AWS Deployment Assignment.
+The project was deployed on AWS EC2 Ubuntu server using Nginx and PM2 in a production-style environment.
 
 ---
 
 # Features
 
-- Secure file upload system
-- User authentication and authorization
-- Responsive React dashboard
-- File management and deletion
-- Analytics dashboard
-- REST API integration
-- Frontend and backend deployment on AWS EC2
-- Publicly accessible application
+- User Authentication
+- File Upload and Management
+- Dashboard Analytics
+- Responsive UI
+- REST API Integration
+- Frontend-Backend Communication
+- AWS Cloud Deployment
 
 ---
 
@@ -26,27 +25,33 @@ This project was deployed on AWS EC2 as part of a Full Stack AWS Deployment Assi
 ## Frontend
 - React.js
 - Vite
-- HTML5
-- CSS3
-- JavaScript
-- Axios
+- Tailwind CSS
 
 ## Backend
 - Node.js
 - Express.js
-- REST APIs
 
-## Cloud & Deployment
-- AWS EC2 Ubuntu Instance
+## Database
+- MongoDB
+
+## Deployment & DevOps
+- AWS EC2 Ubuntu
 - Nginx
 - PM2
-- GitHub
+- Git & GitHub
 
 ---
 
-# Project Structure
+# AWS Deployment Architecture
 
-```bash
-client/
-server/
-README.md
+Browser
+↓
+Nginx (Reverse Proxy)
+↓
+React Frontend
+↓
+Node.js Express Backend
+↓
+MongoDB
+
+---
