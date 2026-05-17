@@ -45,13 +45,13 @@ The project was deployed on AWS EC2 Ubuntu server using Nginx and PM2 in a produ
 # AWS Deployment Architecture
 
 Browser
-↓
+->
 Nginx (Reverse Proxy)
-↓
+->
 React Frontend
-↓
+->
 Node.js Express Backend
-↓
+->
 MongoDB
 
 ---
